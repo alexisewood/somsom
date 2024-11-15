@@ -1,1 +1,1 @@
-# somsom
+# Stae of Mind(Mine)

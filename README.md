@@ -1,1 +1,1 @@
-# Stae of Mind(Mine)
+# State of Mind(Mine)

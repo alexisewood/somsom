@@ -1,5 +1,7 @@
 
-#map { height: 500px; }
+#map {
+    height: 90vh; /* 90% of the viewport height */
+}
 
 body {
   font-family: Arial;

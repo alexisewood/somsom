@@ -1,7 +1,17 @@
-var map = L.map('map',{center:[37.8722721, -122.264747], zoom:5});
+var map = L.map('map', {center: [37.8722721, -122.264747], zoom: 5});
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+// Replace the OpenStreetMap tile layer with a Mapbox tile layer
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWV3NzgiLCJhIjoiY2tmbXl6dXE4MDdyYTJ4b2Z2ZXg4a2c1ayJ9.h8g09oGJgxNvp1ybI24URg', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11', // You can change the map style here
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoiYWV3NzgiLCJhIjoiY2tmbXl6dXE4MDdyYTJ4b2Z2ZXg4a2c1ayJ9.h8g09oGJgxNvp1ybI24URg'
+}).addTo(map);
 
+// Add your markers
 var marker = L.marker([37.870778, -122.264747], { title: 'Coastal Redwood', opacity: '0.5' });
 marker.addTo(map).bindPopup('I am a <a href="https://www.inaturalist.org/observations/23268282">Coastal Redwood</a>!').openPopup();
 

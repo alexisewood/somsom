@@ -20,12 +20,7 @@ body { margin: 0; padding: 0; }
         //projection: 'globe', // Display the map as a globe, since satellite-v9 defaults to Mercator
         //zoom: 1,
         //center: [30, 15]
-    map.dragPan.enable({
-    linearity: 0.3,
-    easing: t => t,
-    maxSpeed: 1400,
-    deceleration: 2500
-});
+    
     });
 	map.addControl(new mapboxgl.NavigationControl());
 	

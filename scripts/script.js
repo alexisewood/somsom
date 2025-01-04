@@ -5,7 +5,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
                  'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
-    id: 'mapbox/streets-v11', // You can change the map style here
+    id: 'mapbox://styles/aew78/cm44uelj6008q01rjhjqga8h2', // You can change the map style here
     tileSize: 512,
     zoomOffset: -1,
     accessToken: 'pk.eyJ1IjoiYWV3NzgiLCJhIjoiY2tmbXl6dXE4MDdyYTJ4b2Z2ZXg4a2c1ayJ9.h8g09oGJgxNvp1ybI24URg'

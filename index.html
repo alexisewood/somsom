@@ -11,10 +11,10 @@ body { margin: 0; padding: 0; }
 </style>
 </head>
 <body>
-<div id="map"></div>
+<div class='map' id='map' style='width: 1920px; height: 900px;'></div>
 <script>
 	mapboxgl.accessToken = 'pk.eyJ1IjoiYWV3NzgiLCJhIjoiY201aW9iZnFvMHh6azJ4cTAwN3NhYjR5cSJ9.nvG2EL1MqPy8U847UHV5gQ';
-    const map = new mapboxgl.Map({
+    	const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/aew78/cm44uelj6008q01rjhjqga8h2',
         //projection: 'globe', // Display the map as a globe, since satellite-v9 defaults to Mercator

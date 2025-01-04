@@ -1,1 +1,35 @@
-
+<html>
+  <head>
+    <title> Endangered Plants of UC Berkeley
+    </title>
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script> 
+  </head>
+  <body>
+    <h1> 🌲 Endangered Plants of UC Berkeley 🌲</h1> 
+    
+    <div id="map"></div>
+    
+    <h2> What am I looking at? </h2>
+    <p> This is a map which gives the locations of a few endangered plants located on UC Berkeley’s campus. This data was taken from the crowdsourcing program <a href="https://www.inaturalist.org/"> iNaturalist </a>.  </p>
+    <h2> Lab One Questions: </h2>
+    <p> <b> 1. Explain the key decisions you’ve made regarding the design and content of your page. What are you mapping, and why are you mapping it? How did you come up with the content and style for your map and page? </b> </p>
+    <p> I decided to map an example of each endangered plant which can be found on UC Berkeley’s campus as documented in iNaturalist, a crowdsourcing platform where citizen scientists can document organism identifications and observations. I mapped these endangered plants to illustrate two things: first, to draw attention to UC Berkeley existing simultaneously as a university and a critical habitat; and second, to bring attention to the valuable work which occurs on iNaturalist. To elaborate on the first point, I think it’s easy to consider oneself as separate from nature when on campus, and instead imagine the fire trails or the Regional Parks System as such. Mapping endangered organisms on top of an area which we inhabit brings more attention to the unavoidable coexistence, if not intimate relationship, between humans and nature. On the second point, iNaturalist illustrates this relationship very well, as it’s crowdsourced, while also providing critical conservation data. </p>
+<p> I found these points via iNaturalist by imputing the area I wished to search and filtered the results by endangered species. I chose to map one of each endangered organism because mapping every coast redwood on campus would be incredibly time consuming and I figured it would be more valuable to have a variety of species rather than many of one. From the crowdsourced data, I pulled out coordinates from each entry and then linked each of these entries within the pop-ups on my map. I tried to center my map as best as possible to capture all my markers while also having adequate zoom so a UC Berkeley affiliate viewer can recognize campus and orient the locations of the plants with familiar buildings. </p>
+<p> In terms of style, I went through a couple of different background colors before I settled on one which was not too overwhelming. I really like adding headings and subheadings because I feel like it breaks up the page and makes the content much easier to read. 
+ </p>
+    <p> <b> 2. What about from a web browser’s perspective; how do the elements of your page tell a story to the browser through code? How do these elements work together to create a functional and well-designed web map? </b> </p>
+    <p> HTML is a markup language, where some of stuff is content like the words you are reading now and the heading of my webpage and other stuff is markup which are text and symbols which tell the browser what the content is, and consequently, how to display the content. So, I can type out the answer to this question, but without the proper markup in HTML, the browser won’t know how to show it to the world. </p> 
+<p> While the HTML holds the content, CSS holds all the styling of that content. So, while I can type out the answer to this question in HTML, with CSS I can tell the browser that I want this answer to be displayed in a particular font in a particular color and in a particular size. </p>
+<p> While HTML holds the content and CSS specifies the styling, Javascript allows me to control the behavior of the webpage, meaning I can make the webpage interactive. 
+In terms of a web map, with HTML I can specify that there is an object in the page which I refer to as “map” and I would like to situate “map” in specific location on the page. With CSS, I can specify the size of object “map”. With JavaScript, I am telling HTML and CSS what I mean by “map” by adding in a tiled web map from the opensource JavaScript library, Leaflet. From here, with Javascript and Leaflet, I can add layers and interactive markers. 
+ </p>
+    <p> <b> 3. Why bother to make your own web map with a platform like Leaflet instead of using one of these more intuitive services? Discuss the pros and cons of using one or both of these services against building your own web map from scratch using leaflet.js. </b> </p>
+    <p> While it’s a lot more work to make your own web map with a platform like Leaflet, using Leaflet provides a lot of customizable options (e.g. new updates, tiles, and plugins). While a program like Google Maps is much easier to use and looks much sleeker, there is an issue with data privacy. In addition, unlike in using Leaflet, you don’t have very much control over how your map is displayed.  </p>
+    <p> <b> made by Alexis Wood </b> </p>
+  </body>
+</html>

@@ -1,13 +1,11 @@
+mapboxgl.accessToken = 'pk.eyJ1IjoiYWV3NzgiLCJhIjoiY2tmbXl6dXE4MDdyYTJ4b2Z2ZXg4a2c1ayJ9.h8g09oGJgxNvp1ybI24URg'; // Replace with your Mapbox access token
+
 var map = L.map('map', {center: [37.8722721, -122.264747], zoom: 5});
 
-// Replace the OpenStreetMap tile layer with a Mapbox tile layer
-L.tileLayer('https://api.mapbox.com/styles/v1/aew78/mapbox://styles/aew78/cm44uelj6008q01rjhjqga8h2/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWV3NzgiLCJhIjoiY2tmbXl6dXE4MDdyYTJ4b2Z2ZXg4a2c1ayJ9.h8g09oGJgxNvp1ybI24URg', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-                 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    tileSize: 512,
-    zoomOffset: -1,
-    accessToken: 'pk.eyJ1IjoiYWV3NzgiLCJhIjoiY2tmbXl6dXE4MDdyYTJ4b2Z2ZXg4a2c1ayJ9.h8g09oGJgxNvp1ybI24URg' // Replace with your Mapbox access token
+// Use the Mapbox GL JS layer with Leaflet
+L.mapboxGL({
+    accessToken: mapboxgl.accessToken,
+    style: 'mapbox://styles/aew78/cm44uelj6008q01rjhjqga8h2' // Replace with your Mapbox style ID
 }).addTo(map);
 
 // Add your markers

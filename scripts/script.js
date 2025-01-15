@@ -12,7 +12,7 @@ L.mapboxGL({
 var geojsonFiles = [
   'https://raw.githubusercontent.com/alexisewood/somsom/refs/heads/main/styles/data/AlaskanIndependenceParty1984_32.js',
   'https://raw.githubusercontent.com/alexisewood/somsom/refs/heads/main/styles/data/AmericanRedoubt2011_2.js',
-  'https://github.com/alexisewood/somsom/blob/main/styles/data/BajaArizona2012_17.js'
+  'https://raw.githubusercontent.com/alexisewood/somsom/refs/heads/main/styles/data/BajaArizona2012_17.js'
 ];
 
 geojsonFiles.forEach(function(url) {

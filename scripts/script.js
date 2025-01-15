@@ -7,3 +7,14 @@ L.mapboxGL({
     accessToken: mapboxgl.accessToken,
     style: 'mapbox://styles/aew78/cm44uelj6008q01rjhjqga8h2' // Replace with your Mapbox style ID
 }).addTo(map);
+
+// loop to add multiple files 
+var geojsonFiles = [
+  'https://raw.githubusercontent.com/alexisewood/somsom/refs/heads/main/styles/data/AlaskanIndependenceParty1984_32.js',
+  'https://raw.githubusercontent.com/alexisewood/somsom/refs/heads/main/styles/data/AmericanRedoubt2011_2.js',
+  'https://github.com/alexisewood/somsom/blob/main/styles/data/BajaArizona2012_17.js'
+];
+
+geojsonFiles.forEach(function(url) {
+  L.geoJSON.ajax(url).addTo(map);
+});

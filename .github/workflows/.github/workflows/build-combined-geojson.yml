@@ -1,0 +1,34 @@
+name: Build combined GeoJSON
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "styles/data/**"
+      - "scripts/combine_geojson.py"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build combined.geojson
+        run: python scripts/combine_geojson.py
+
+      - name: Commit combined.geojson (if changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add styles/data/combined.geojson
+          git diff --cached --quiet || git commit -m "Update combined.geojson"
+          git push

@@ -3,8 +3,8 @@ const CONFIG = {
 
   MAPBOX_STYLE: "mapbox://styles/aew78/cm44uelj6008q01rjhjqga8h2",
 
-  BASEROW_TABLE_ID: "YOUR_BASEROW_TABLE_ID",
-  BASEROW_TOKEN: "YOUR_BASEROW_DATABASE_TOKEN",
+  BASEROW_TABLE_ID: "924883",
+  BASEROW_TOKEN: "fj6JMaUImsA2lsEwceXH50JjUCauvi3C",
 
   BASEROW_API_BASE: "https://api.baserow.io/api/database/rows/table",
 

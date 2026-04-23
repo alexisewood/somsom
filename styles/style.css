@@ -1,9 +1,4 @@
-
-#map {
-    height: 90vh; /* 90% of the viewport height */
-	visibility: visible;
-}
-
+html,
 body {
   font-family: 'Courier New', monospace;
   background: #000000;
@@ -26,4 +21,37 @@ h2 {
 	text-align: left;
 	font-size: 20px;
 	letter-spacing: 1px;
+}
+main {
+  height: calc(100vh - 120px);
+}
+
+#map {
+  width: 65%;
+  height: 65%;
+}
+
+footer {
+  padding: 0.75rem 1.5rem;
+  background: #f7f3ec;
+  border-top: 1px solid #d8d0c3;
+  font-size: 0.9rem;
+}
+
+.mapboxgl-popup-content {
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.popup-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.popup-meta {
+  color: #555;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
 }

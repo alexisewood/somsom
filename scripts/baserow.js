@@ -16,20 +16,17 @@ async function fetchBaserowRows() {
 }
 
 async function fetchGeojsonFromBaserowFile(row) {
-  const geojsonField = CONFIG.FIELD_NAMES.geojson;
-  const files = row[geojsonField];
+  const filename = row[CONFIG.FIELD_NAMES.geojson];
 
-  if (!files || files.length === 0) {
-    console.warn("No GeoJSON file attached for row:", row);
+  if (!filename) {
     return null;
   }
 
-  const geojsonUrl = files[0].url;
-
-  const response = await fetch(geojsonUrl);
+  const response = await fetch(`data/geojson/${filename}`);
 
   if (!response.ok) {
-    throw new Error(`Could not fetch GeoJSON file: ${geojsonUrl}`);
+    console.warn(`Could not fetch GeoJSON: ${filename}`);
+    return null;
   }
 
   return await response.json();

@@ -24,11 +24,65 @@ h2 {
 }
 main {
   height: calc(100vh - 120px);
+  display: flex;
+  overflow: hidden;
 }
 
 #map {
-  width: 65%;
-  height: 65%;
+  flex: 1;
+  height: 100%;
+}
+
+#sidebar {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+  background: #111;
+  color: #ccc;
+  font-family: 'Courier New', monospace;
+  box-sizing: border-box;
+  position: relative;
+}
+
+#sidebar.active {
+  width: 340px;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+#sidebar h2 {
+  color: white;
+  font-size: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+#sidebar p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}
+
+#sidebar a {
+  color: #aaa;
+}
+
+#sidebar-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: 1px solid #555;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.1rem 0.5rem;
+  line-height: 1;
+}
+
+#sidebar-close:hover {
+  border-color: white;
 }
 
 footer {
@@ -54,4 +108,31 @@ footer {
   color: #555;
   font-size: 0.85rem;
   margin-bottom: 0.5rem;
+}
+
+.picker-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+
+.picker-list li {
+  margin-bottom: 0.4rem;
+}
+
+.picker-btn {
+  background: none;
+  border: 1px solid #555;
+  color: #ccc;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.picker-btn:hover {
+  border-color: white;
+  color: white;
 }

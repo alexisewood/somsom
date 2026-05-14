@@ -11,6 +11,20 @@ map.addControl(new mapboxgl.NavigationControl());
 
 const fillLayerIds = [];
 const rowByLayerId = {};
+let currentHighlightLayerIds = null;
+
+function updateHighlight(fillLayerId, isHighlight) {
+  if (!fillLayerId) return;
+  
+  const lineLayerId = fillLayerId.replace("fill", "line");
+  if (isHighlight) {
+    map.setPaintProperty(fillLayerId, "fill-opacity", 1);
+    map.setPaintProperty(lineLayerId, "line-width", 5);
+  } else {
+    map.setPaintProperty(fillLayerId, "fill-opacity", 0.38);
+    map.setPaintProperty(lineLayerId, "line-width", 3);
+  }
+}
 
 map.on("click", function (e) {
   if (fillLayerIds.length === 0) return;
@@ -93,6 +107,11 @@ function showSidebar(row) {
     ${archives ? `<p><b>Related archives:</b><br>${archives}</p>` : ""}
   `;
 
+  // Find the layer ID for this row
+  currentHighlightLayerIds = Object.keys(rowByLayerId).find(function (layerId) {
+    return rowByLayerId[layerId].id === row.id;
+  });
+
   document.getElementById("sidebar").classList.add("active");
 }
 
@@ -100,10 +119,40 @@ document.getElementById("sidebar-close").addEventListener("click", function () {
   document.getElementById("sidebar").classList.remove("active");
 });
 
+// Attach hover highlight listeners to sidebar
+document.getElementById("sidebar").addEventListener("mouseenter", function () {
+  if (currentHighlightLayerIds) {
+    updateHighlight(currentHighlightLayerIds, true);
+  }
+});
+
+document.getElementById("sidebar").addEventListener("mouseleave", function () {
+  if (currentHighlightLayerIds) {
+    updateHighlight(currentHighlightLayerIds, false);
+  }
+});
+
 function addMovementGeojsonToMap(geojson, row, index) {
   const sourceId = `movement-source-${index}`;
   const fillLayerId = `movement-fill-${index}`;
   const lineLayerId = `movement-line-${index}`;
+
+  const vintagePalette = [
+    "#d4b8ff",
+    "#f8df7c",
+    "#a5c9ff",
+    "#ffbdbd",
+    "#d9a3ff",
+    "#f7e18d",
+    "#84b0ff",
+    "#ff9cb2",
+    "#c3b4ff",
+    "#ffe18a",
+    "#8cb3ff",
+    "#ff9e8c"
+  ];
+  const fillColor = vintagePalette[index % vintagePalette.length];
+  const lineColor = "#264e31";
 
   map.addSource(sourceId, {
     type: "geojson",
@@ -115,7 +164,9 @@ function addMovementGeojsonToMap(geojson, row, index) {
     type: "fill",
     source: sourceId,
     paint: {
-      "fill-opacity": 0.25
+      "fill-color": fillColor,
+      "fill-opacity": 0.38,
+      "fill-outline-color": lineColor
     }
   });
 
@@ -124,7 +175,11 @@ function addMovementGeojsonToMap(geojson, row, index) {
     type: "line",
     source: sourceId,
     paint: {
-      "line-width": 2
+      "line-color": lineColor,
+      "line-width": 3,
+      "line-opacity": 1,
+      "line-join": "round",
+      "line-cap": "round"
     }
   });
 

@@ -11,19 +11,146 @@ map.addControl(new mapboxgl.NavigationControl());
 
 const fillLayerIds = [];
 const rowByLayerId = {};
-let currentHighlightLayerIds = null;
+let currentSidebarLayerId = null;
+let highlightedSidebarLayerId = null;
 
-function updateHighlight(fillLayerId, isHighlight) {
-  if (!fillLayerId) return;
-  
-  const lineLayerId = fillLayerId.replace("fill", "line");
-  if (isHighlight) {
-    map.setPaintProperty(fillLayerId, "fill-opacity", 1);
+function setSidebarHighlight(layerId, active) {
+  if (!layerId) return;
+
+  const lineLayerId = layerId.replace("fill", "line");
+  if (active) {
+    map.setPaintProperty(layerId, "fill-opacity", 1);
     map.setPaintProperty(lineLayerId, "line-width", 5);
   } else {
-    map.setPaintProperty(fillLayerId, "fill-opacity", 0.38);
+    map.setPaintProperty(layerId, "fill-opacity", 0.38);
     map.setPaintProperty(lineLayerId, "line-width", 3);
   }
+  highlightedSidebarLayerId = active ? layerId : null;
+}
+
+function clearSidebarHighlight() {
+  if (highlightedSidebarLayerId) {
+    setSidebarHighlight(highlightedSidebarLayerId, false);
+  }
+}
+
+function isImageUrl(url) {
+  return /\.(jpe?g|png|gif|webp|avif|svg)$/i.test(url);
+}
+
+function renderArchivePhotos(archivesRaw) {
+  if (!Array.isArray(archivesRaw) || archivesRaw.length === 0) {
+    return `<p>No archive files available.</p>`;
+  }
+
+  return archivesRaw.map(function (a, index) {
+    const url = typeof a === "string" ? a : a.url || "";
+    const name = typeof a === "string" ? a : a.visible_name || a.name || url;
+    if (!url) return "";
+
+    const header = `
+      <div class="archive-photo-header">
+        <span class="archive-photo-drag-handle" title="Drag to move">☰</span>
+        <span class="archive-photo-title">${name}</span>
+        <button class="archive-photo-collapse" type="button">Collapse</button>
+      </div>
+    `;
+
+    if (isImageUrl(url)) {
+      return `
+        <div class="archive-photo" data-archive-index="${index}">
+          ${header}
+          <div class="archive-photo-body">
+            <img src="${url}" alt="${name}" loading="lazy" />
+            <p>${name}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="archive-photo archive-file" data-archive-index="${index}">
+        ${header}
+        <div class="archive-photo-body">
+          <a href="${url}" target="_blank">${name}</a>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+let archiveDragState = null;
+
+function setupArchivePopupInteractions() {
+  const cards = document.querySelectorAll(".archive-popup-content .archive-photo");
+
+  cards.forEach(function (card, index) {
+    const startLeft = 30 + (index * 40);
+    const startTop = 30 + (index * 40);
+
+    card.style.position = "absolute";
+    card.style.left = `${startLeft}px`;
+    card.style.top = `${startTop}px`;
+    card.dataset.translateX = `${startLeft}`;
+    card.dataset.translateY = `${startTop}`;
+    card.style.transform = "none";
+    card.style.maxWidth = "380px";
+    card.style.minWidth = "240px";
+    card.style.maxHeight = "70vh";
+
+    const dragHandle = card.querySelector(".archive-photo-drag-handle");
+    if (dragHandle) {
+      dragHandle.style.touchAction = "none";
+      dragHandle.addEventListener("pointerdown", function (event) {
+        archiveDragState = {
+          card: card,
+          startX: event.clientX,
+          startY: event.clientY,
+          originX: parseFloat(card.dataset.translateX) || 0,
+          originY: parseFloat(card.dataset.translateY) || 0
+        };
+        card.classList.add("dragging");
+        dragHandle.setPointerCapture(event.pointerId);
+      });
+    }
+
+    const collapseBtn = card.querySelector(".archive-photo-collapse");
+    if (collapseBtn) {
+      collapseBtn.addEventListener("click", function () {
+        card.classList.toggle("collapsed");
+        collapseBtn.textContent = card.classList.contains("collapsed") ? "Expand" : "Collapse";
+      });
+    }
+  });
+}
+
+function updateArchiveDrag(event) {
+  if (!archiveDragState) return;
+
+  const dx = event.clientX - archiveDragState.startX;
+  const dy = event.clientY - archiveDragState.startY;
+  const x = archiveDragState.originX + dx;
+  const y = archiveDragState.originY + dy;
+
+  archiveDragState.card.style.left = `${Math.max(0, x)}px`;
+  archiveDragState.card.style.top = `${Math.max(0, y)}px`;
+  archiveDragState.card.dataset.translateX = x;
+  archiveDragState.card.dataset.translateY = y;
+}
+
+function endArchiveDrag() {
+  if (!archiveDragState) return;
+  archiveDragState.card.classList.remove("dragging");
+  archiveDragState = null;
+}
+
+document.addEventListener("pointermove", updateArchiveDrag);
+document.addEventListener("pointerup", endArchiveDrag);
+
+function getFillLayerIdForRowId(rowId) {
+  return Object.keys(rowByLayerId).find(function (layerId) {
+    return rowByLayerId[layerId].id === rowId;
+  });
 }
 
 map.on("click", function (e) {
@@ -70,10 +197,25 @@ function showPicker(rows) {
   document.getElementById("sidebar").classList.add("active");
 
   document.querySelectorAll(".picker-btn").forEach(function (btn) {
+    const id = parseInt(btn.getAttribute("data-id"));
+    const row = rows.find(function (r) { return r.id === id; });
+
     btn.addEventListener("click", function () {
-      const id = parseInt(btn.getAttribute("data-id"));
-      const row = rows.find(function (r) { return r.id === id; });
       if (row) showSidebar(row);
+    });
+
+    btn.addEventListener("mouseenter", function () {
+      const layerId = getFillLayerIdForRowId(id);
+      if (layerId) {
+        setSidebarHighlight(layerId, true);
+      }
+    });
+
+    btn.addEventListener("mouseleave", function () {
+      const layerId = getFillLayerIdForRowId(id);
+      if (layerId) {
+        setSidebarHighlight(layerId, false);
+      }
     });
   });
 }
@@ -91,44 +233,76 @@ function showSidebar(row) {
     : "";
 
   const archivesRaw = row[fields.archives];
-  const archives = Array.isArray(archivesRaw) && archivesRaw.length > 0
-    ? archivesRaw.map(function (a) {
-        return a.url
-          ? `<a href="${a.url}" target="_blank">${a.visible_name || a.url}</a>`
-          : a;
-      }).join("<br>")
-    : "";
+  const hasArchives = Array.isArray(archivesRaw) && archivesRaw.length > 0;
 
   document.getElementById("sidebar-content").innerHTML = `
     <h2>${name}</h2>
     ${startYear ? `<p><b>Start year:</b> ${startYear}</p>` : ""}
     ${states ? `<p><b>States involved:</b> ${states}</p>` : ""}
     ${description ? `<p>${description}</p>` : ""}
-    ${archives ? `<p><b>Related archives:</b><br>${archives}</p>` : ""}
+    ${hasArchives ? `<button id="explore-btn" class="explore-btn">Explore</button>` : ""}
   `;
 
-  // Find the layer ID for this row
-  currentHighlightLayerIds = Object.keys(rowByLayerId).find(function (layerId) {
-    return rowByLayerId[layerId].id === row.id;
-  });
+  // Reset any previous sidebar highlight when switching selection
+  clearSidebarHighlight();
+
+  currentSidebarLayerId = getFillLayerIdForRowId(row.id);
+
+  const titleEl = document.querySelector("#sidebar-content h2");
+  if (titleEl) {
+    titleEl.addEventListener("mouseenter", function () {
+      if (currentSidebarLayerId) {
+        setSidebarHighlight(currentSidebarLayerId, true);
+      }
+    });
+    titleEl.addEventListener("mouseleave", function () {
+      if (currentSidebarLayerId) {
+        setSidebarHighlight(currentSidebarLayerId, false);
+      }
+    });
+  }
+
+  if (hasArchives) {
+    const exploreBtn = document.getElementById("explore-btn");
+    exploreBtn.addEventListener("click", function () {
+      showArchivePopup(archivesRaw);
+    });
+  }
 
   document.getElementById("sidebar").classList.add("active");
 }
 
+function showArchivePopup(archivesRaw) {
+  const popup = document.getElementById("archive-popup");
+  const popupContent = document.getElementById("archive-popup-content");
+
+  popupContent.innerHTML = renderArchivePhotos(archivesRaw);
+  popup.classList.remove("hidden");
+  document.body.classList.add("no-scroll");
+  setupArchivePopupInteractions();
+}
+
+function hideArchivePopup() {
+  const popup = document.getElementById("archive-popup");
+  popup.classList.add("hidden");
+  document.body.classList.remove("no-scroll");
+}
+
 document.getElementById("sidebar-close").addEventListener("click", function () {
   document.getElementById("sidebar").classList.remove("active");
+  clearSidebarHighlight();
 });
 
-// Attach hover highlight listeners to sidebar
-document.getElementById("sidebar").addEventListener("mouseenter", function () {
-  if (currentHighlightLayerIds) {
-    updateHighlight(currentHighlightLayerIds, true);
-  }
-});
+const archiveCloseButton = document.getElementById("archive-popup-close");
+if (archiveCloseButton) {
+  archiveCloseButton.addEventListener("click", function () {
+    hideArchivePopup();
+  });
+}
 
-document.getElementById("sidebar").addEventListener("mouseleave", function () {
-  if (currentHighlightLayerIds) {
-    updateHighlight(currentHighlightLayerIds, false);
+document.getElementById("archive-popup").addEventListener("click", function (e) {
+  if (e.target.id === "archive-popup") {
+    hideArchivePopup();
   }
 });
 
